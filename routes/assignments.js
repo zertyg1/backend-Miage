@@ -3,11 +3,14 @@ let Assignment = require('../model/assignment');
 // Récupérer tous les assignments (GET)
 function getAssignments(req, res) {
     var aggregateQuery = Assignment.aggregate();
+    const sortField = req.query.sortField || 'id';
+    const sortOrder = parseInt(req.query.sortOrder) || 1; // 1 for ascending, -1 for descending
 
     Assignment.aggregatePaginate(aggregateQuery,
         {
             page: parseInt(req.query.page) || 1,
             limit: parseInt(req.query.limit) || 10,
+            sort: { [sortField]: sortOrder }
         },
         (err, assignments) => {
             if (err) {
@@ -36,6 +39,10 @@ function postAssignment(req, res) {
     assignment.nom = req.body.nom;
     assignment.dateDeRendu = req.body.dateDeRendu;
     assignment.rendu = req.body.rendu;
+    assignment.auteur = req.body.auteur;    
+    assignment.matiere = req.body.matiere;
+    assignment.note = req.body.note;
+    assignment.remarques = req.body.remarques;
 
     console.log("POST assignment reçu :");
     console.log(assignment)
